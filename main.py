@@ -7,6 +7,7 @@ import pinyin
 from typing import List, Tuple, Dict
 from tqdm import tqdm
 from pathlib import Path
+import csv
 
 def load_file(path: str):
     with open(path, mode='r') as f:
@@ -14,14 +15,23 @@ def load_file(path: str):
         url, entries = url.rstrip(), [e.rstrip() for e in entries]
     return url, entries
 
-def parse_entries(entries: List[str]) -> Tuple[float, float, str]:
-    entries = [e.split(',', maxsplit=2) for e in entries]
-    return [(float(start), float(end), s) for start, end, s in entries]
+def parse_entries(entries: List[str]) -> List[Tuple[str, List[str], float, float]]:
+    entries = list(csv.reader(entries))
+    
+    output_entries = []
+    for e in entries:
+        if len(e) > 3:
+            s, *definitions, start, end = e
+            output_entries.append((s, *definitions, float(start), float(end)))
+        s, start, end = e
+        output_entries.append((s, [], float(start), float(end)))
 
-def md_to_html_bold(entries: List[Tuple[float, float, str]]):
+    return output_entries
+
+def md_to_html_bold(entries: List[Tuple[str, List[str], float, float]]):
     match = r'\*\*(.+?)\*\*'
     replace = r'<b>\1</b>'
-    return [(*_, re.sub(match, replace, s), list(set(re.findall(match, s)))) for *_, s in entries]
+    return [(re.sub(match, replace, s), list(set(re.findall(match, s))), *_) for s, *_ in entries]
 
 def download_audio(url: str, opts: Dict[str, str] = {}, codec: str = 'mp3'):
     audio_opts = {
@@ -80,20 +90,19 @@ def main(args):
     f = open(f"{base_name}.csv", mode='w')
 
     for i, e in enumerate(tqdm(entries)):
-        start, end, sentence, words = e
+        sentence, words, definitions, start, end = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
         img_name = f"{base_name}_{i:03}"
         create_clip(start, end, in_file, clip_name)
 
         get_screenshot(base_name, start, img_name)
 
-        definitions = []
         print(f'Provide definitions for sentence "{sentence}"')
-        for w in words:
+        for w in words[len(definitions):]:
             d = input(f"{w} - ")
             definitions.append(d)
 
-            f.write(create_line(sentence, words, definitions, clip_name, img_name))
+        f.write(create_line(sentence, words, definitions, clip_name, img_name))
 
 
 if __name__ == '__main__':
