@@ -21,7 +21,7 @@ def parse_entries(entries: List[str]) -> Tuple[float, float, str]:
 def md_to_html_bold(entries: List[Tuple[float, float, str]]):
     match = r'\*\*(.+?)\*\*'
     replace = r'<b>\1</b>'
-    return [(*_, re.sub(match, replace, s), re.findall(match, s)) for *_, s in entries]
+    return [(*_, re.sub(match, replace, s), list(set(re.findall(match, s)))) for *_, s in entries]
 
 def download_audio(url: str, opts: Dict[str, str] = {}, codec: str = 'mp3'):
     audio_opts = {
@@ -82,7 +82,7 @@ def main(args):
     for i, e in enumerate(tqdm(entries)):
         start, end, sentence, words = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
-        img_name = f"{base_name}_{i:03}.jpg"
+        img_name = f"{base_name}_{i:03}"
         create_clip(start, end, in_file, clip_name)
 
         get_screenshot(base_name, start, img_name)
