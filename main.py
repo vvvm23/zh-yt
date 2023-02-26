@@ -22,7 +22,8 @@ def parse_entries(entries: List[str]) -> List[Tuple[str, List[str], float, float
     for e in entries:
         if len(e) > 3:
             s, *definitions, start, end = e
-            output_entries.append((s, *definitions, float(start), float(end)))
+            output_entries.append((s, definitions, float(start), float(end)))
+            continue
         s, start, end = e
         output_entries.append((s, [], float(start), float(end)))
 
@@ -70,7 +71,7 @@ def create_line(sentence, words, definitions, audio_path, img_path):
     words = words + ['']*(5 - len(words))
     definitions = definitions + ['']*(5 - len(definitions))
 
-    line = f'{sentence},{words[0]},{pinyins[0]},"{definitions[0]}",[sound:{audio_path}],<img src="{img_path}">'
+    line = f'{sentence},{words[0]},{pinyins[0]},"{definitions[0]}",[sound:{audio_path}],<img src="{img_path}.jpg">'
     for w, p, d in zip(words[1:], pinyins[1:], definitions[1:]):
         line += f',{w},{p},"{d}"'
     line += '\n'
@@ -96,6 +97,7 @@ def main(args):
         create_clip(start, end, in_file, clip_name)
 
         get_screenshot(base_name, start, img_name)
+        print(e)
 
         print(f'Provide definitions for sentence "{sentence}"')
         for w in words[len(definitions):]:
