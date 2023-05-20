@@ -5,3 +5,5 @@
 *.csv
 venv
 *.mkv
+
+!example.csv
