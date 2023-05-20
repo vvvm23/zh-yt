@@ -6,4 +6,3 @@
 venv
 *.mkv
 
-!example.csv
