@@ -2,3 +2,5 @@ git+https://github.com/ytdl-org/youtube-dl.git
 
 tqdm
 pinyin
+
+git+https://github.com/sanchit-gandhi/whisper-jax.git

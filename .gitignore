@@ -6,3 +6,8 @@
 venv
 *.mkv
 
+*.txt
+!example.txt
+
+compilation_cache/
+__pycache__/
