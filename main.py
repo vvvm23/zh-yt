@@ -62,6 +62,7 @@ def get_screenshot(title: str, time: float, out_name):
     subprocess.call(command)
 
 def create_clip(start_time: float, end_time: float, in_file: str, out_file: str):
+    start_time = max(0.0, start_time)
     length = end_time - start_time
     command = ['ffmpeg', "-y", '-i', in_file, '-ss', str(start_time), '-t', str(length), out_file]
     subprocess.call(command)
@@ -94,9 +95,9 @@ def main(args):
         sentence, words, definitions, start, end = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
         img_name = f"{base_name}_{i:03}"
-        create_clip(start, end, in_file, clip_name)
+        create_clip(start-1.0, end+1.0, in_file, clip_name)
 
-        get_screenshot(base_name, start, img_name)
+        get_screenshot(base_name, start+0.5, img_name)
         print(e)
 
         print(f'Provide definitions for sentence "{sentence}"')

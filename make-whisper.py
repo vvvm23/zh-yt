@@ -26,5 +26,8 @@ with open(out_file, mode='w') as f:
     f.write(f"{url}\n")
     for c in outputs['chunks']:
         (time_start, time_end), text = c['timestamp'], c['text']
-        # print(f"{c['timestamp']} | {c['text']}")
-        f.write(f"{text},definition,{time_start:.2f},{time_end:.2f}\n")
+        try:
+            f.write(f'"{text}",definition,{time_start:.2f},{time_end:.2f}\n')
+        except Exception as e:
+            print("failed")
+            print(text, time_start, time_end)
