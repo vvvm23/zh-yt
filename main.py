@@ -67,14 +67,14 @@ def create_clip(start_time: float, end_time: float, in_file: str, out_file: str)
     command = ['ffmpeg', "-y", '-i', in_file, '-ss', str(start_time), '-t', str(length), out_file]
     subprocess.call(command)
 
-def create_line(sentence, words, definitions, audio_path, img_path):
+def create_line(sentence, words, definitions, audio_path, img_path, sep: str = '\t'):
     pinyins = [pinyin.get(w) for w in words] + ['']*(5 - len(words))
     words = words + ['']*(5 - len(words))
     definitions = definitions + ['']*(5 - len(definitions))
 
-    line = f'{sentence},{words[0]},{pinyins[0]},"{definitions[0]}",[sound:{audio_path}],<img src="{img_path}.jpg">'
+    line = f'{sentence}{sep}{words[0]}{sep}{pinyins[0]}{sep}"{definitions[0]}"{sep}"[sound:{audio_path}]"{sep}<img src="{img_path}.jpg">'
     for w, p, d in zip(words[1:], pinyins[1:], definitions[1:]):
-        line += f',{w},{p},"{d}"'
+        line += f'{sep}{w}{sep}{p}{sep}"{d}"'
     line += '\n'
     return line
 
@@ -95,7 +95,7 @@ def main(args):
         sentence, words, definitions, start, end = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
         img_name = f"{base_name}_{i:03}"
-        create_clip(start-1.0, end+1.0, in_file, clip_name)
+        create_clip(start-0.1, end+0.1, in_file, clip_name)
 
         get_screenshot(base_name, start+0.5, img_name)
         print(e)
