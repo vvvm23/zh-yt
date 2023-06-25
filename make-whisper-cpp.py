@@ -18,12 +18,12 @@ def get_whisper_cpp(path: str, model_path: str = "./whisper.cpp/models/ggml-larg
     return res.stdout
 
 def convert_timestamp(timestamp: str):
-    timestamp, ms = timestamp.split('.')
-    h, m, s = timestamp.split(':')
+    hms, ms = timestamp.split('.')
+    h, m, s = hms.split(':')
 
     MINUTE = 60
     HOUR = 60 * MINUTE
-    return int(h) * HOUR + int(m) * MINUTE + int(s) + float(ms)
+    return int(h) * HOUR + int(m) * MINUTE + int(s) + int(ms) / 1000.
 
 if __name__ == "__main__":
     url = sys.argv[1]
