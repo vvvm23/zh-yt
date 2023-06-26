@@ -9,6 +9,8 @@ from tqdm import tqdm
 from pathlib import Path
 import csv
 
+from hashlib import sha256
+
 def load_file(path: str):
     with open(path, mode='r') as f:
         url, *entries = f.readlines()
@@ -43,9 +45,10 @@ def download_audio(url: str, opts: Dict[str, str] = {}, codec: str = 'mp3'):
             'preferredcodec': codec,
             'preferredquality': '192',
         }],
+        
     }
     opts.update(audio_opts)
-    with youtube_dl.YoutubeDL({'format': 'mp4'}) as ydl:
+    with youtube_dl.YoutubeDL({'format': 'mp4', 'outtmpl': f"{sha256(url.encode()).hexdigest()[:16]}.mp4"}) as ydl:
         res = ydl.extract_info(url)
 
     with open('downloaded.txt', mode='a') as f:
@@ -85,7 +88,8 @@ def main(args):
     res = download_audio(url, codec=args.codec)
     title, video_id = res['title'].replace('?', ''), res['display_id']
 
-    base_name = f'{title}-{video_id}'
+    # base_name = f'{title}-{video_id}'
+    base_name = f"{sha256(url.encode()).hexdigest()[:16]}"
     in_file = f'{base_name}.{args.codec}'
     convert_audio(base_name, args.codec)
     
@@ -95,9 +99,9 @@ def main(args):
         sentence, words, definitions, start, end = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
         img_name = f"{base_name}_{i:03}"
-        create_clip(start-0.1, end+0.1, in_file, clip_name)
+        create_clip(start-1.0, end+1.0, in_file, clip_name)
 
-        get_screenshot(base_name, start+0.5, img_name)
+        get_screenshot(base_name, start+0.2, img_name)
         print(e)
 
         print(f'Provide definitions for sentence "{sentence}"')

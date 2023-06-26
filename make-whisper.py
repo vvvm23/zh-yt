@@ -14,6 +14,7 @@ codec = 'mp3'
 res = download_audio(url, codec=codec)
 title, video_id = res['title'].replace('?', ''), res['display_id']
 
+# TODO: change to use hash
 base_name = f'{title}-{video_id}'
 in_file = f'{base_name}.{codec}'
 convert_audio(base_name, codec)

@@ -2,6 +2,7 @@ import sys
 import subprocess
 import re
 from main import download_audio
+from hashlib import sha256
 
 def convert_audio(title: str):
     # command = ["ffmpeg", "-y", "-i", title + '.mp4', "-t", "10", "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", "-q:a", "0", "-map", "a", title + f".wav"]
@@ -30,9 +31,11 @@ if __name__ == "__main__":
     out_file = sys.argv[2]
 
     res = download_audio(url)
-    title, video_id = res['title'].replace('?', ''), res['display_id']
+    # title, video_id = res['title'].replace('?', ''), res['display_id']
 
-    base_name = f'{title}-{video_id}'
+    # base_name = f'{title}-{video_id}'
+    # TODO: don't calculate this multiple times
+    base_name = f"{sha256(url.encode()).hexdigest()[:16]}"
     convert_audio(base_name)
     in_file = f'{base_name}.wav'
 
