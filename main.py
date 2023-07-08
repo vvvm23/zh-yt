@@ -99,7 +99,7 @@ def main(args):
         sentence, words, definitions, start, end = e
         clip_name = f'{base_name}_{i:03}.{args.codec}'
         img_name = f"{base_name}_{i:03}"
-        create_clip(start-1.0, end+1.0, in_file, clip_name)
+        create_clip(start, end, in_file, clip_name)
 
         get_screenshot(base_name, start+0.2, img_name)
         print(e)

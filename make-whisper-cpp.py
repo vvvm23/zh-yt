@@ -9,7 +9,7 @@ def convert_audio(title: str):
     command = ["ffmpeg", "-y", "-i", title + '.mp4', "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", "-q:a", "0", "-map", "a", title + f".wav"]
     subprocess.call(command)
 
-def get_whisper_cpp(path: str, model_path: str = "./whisper.cpp/models/ggml-large-v1.bin", threads: int = 8, lang: str = "chinese"):
+def get_whisper_cpp(path: str, model_path: str = "./whisper.cpp/models/ggml-large-v1.bin", threads: int = 8, lang: str = "chinese", max_length: int = 12):
     command = ["./whisper.cpp/main", "-f", path, "-m", model_path, "-t", str(threads), "-l", lang]
     res = subprocess.run(command, stdout=subprocess.PIPE, text=True)
 
@@ -27,6 +27,7 @@ def convert_timestamp(timestamp: str):
     return int(h) * HOUR + int(m) * MINUTE + int(s) + int(ms) / 1000.
 
 if __name__ == "__main__":
+    # TODO: add proper arg handling, start and end times
     url = sys.argv[1]
     out_file = sys.argv[2]
 
