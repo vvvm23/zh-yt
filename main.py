@@ -101,7 +101,7 @@ def main(args):
         img_name = f"{base_name}_{i:03}"
         create_clip(start, end, in_file, clip_name)
 
-        get_screenshot(base_name, start+0.2, img_name)
+        get_screenshot(base_name, start+0.5, img_name)
         print(e)
 
         print(f'Provide definitions for sentence "{sentence}"')
