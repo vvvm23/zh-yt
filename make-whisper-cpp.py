@@ -12,7 +12,7 @@ def convert_audio(title: str):
 
 def get_whisper_cpp(
         path: str, 
-        model_path: str = "./whisper.cpp/models/ggml-large-v1.bin", 
+        model_path: str = "./whisper.cpp/models/ggml-large-v3.bin", 
         threads: int = 8, 
         lang: str = "chinese", 
         max_length: Optional[int] = 60,
