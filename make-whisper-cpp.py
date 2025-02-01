@@ -17,7 +17,8 @@ def get_whisper_cpp(
         lang: str = "chinese", 
         max_length: Optional[int] = 60,
     ):
-    command = ["./whisper.cpp/main", "-f", path, "-m", model_path, "-t", str(threads), "-l", lang]
+    #command = ["./whisper.cpp/main", "-f", path, "-m", model_path, "-t", str(threads), "-l", lang]
+    command = ["whisper.cpp/build/bin/whisper-cli", "-f", path, "-m", model_path, "-l", lang]
     if max_length is not None:
         command.extend(["-ml", str(max_length)])
     res = subprocess.run(command, stdout=subprocess.PIPE, text=True)
@@ -38,7 +39,7 @@ def convert_timestamp(timestamp: str):
 if __name__ == "__main__":
     # TODO: add proper arg handling, start and end times
     url = sys.argv[1]
-    out_file = sys.argv[2]
+    out_file = "outputs/" + sys.argv[2]
 
     res = download_audio(url)
     # title, video_id = res['title'].replace('?', ''), res['display_id']

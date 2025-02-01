@@ -5,9 +5,11 @@
 *.csv
 venv
 *.mkv
+*.wav
 
 *.txt
 !example.txt
 
 compilation_cache/
 __pycache__/
+outputs/
